@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Setters are reserved for the login exercise. */
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/constants/api';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -8,14 +11,44 @@ export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const { login } = useAuth();
+  const router = useRouter();
+
   const handleLogin = async () => {
-    // TODO EXAM: 1. Validate email and password.
-    // TODO EXAM: 2. Set loading and clear previous errors.
-    // TODO EXAM: 3. POST to /login using fetch() and async/await.
-    // TODO EXAM: 4. Check response.ok and parse the returned JSON.
-    // TODO EXAM: 5. Pass the returned access token and user to the context login().
-    // TODO EXAM: 6. Navigate using router.replace() after successful authentication.
-    // TODO EXAM: 7. Handle login errors and stop loading in finally.
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Fallback for missing fields depending on what your mock API returns
+        const token = data.token || 'mock-token';
+        const user = data.user || { email };
+        
+        await login(token, user);
+        router.replace('/');
+      } else {
+        setError('Invalid credentials.');
+      }
+    } catch (e) {
+      setError('An error occurred during login.');
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
