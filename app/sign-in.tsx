@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars -- Setters are reserved for the login exercise. */
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -68,7 +67,6 @@ export default function SignInScreen() {
         <Pressable accessibilityRole="button" style={styles.button} onPress={handleLogin} disabled={loading}>
           <Text style={styles.buttonText}>{loading ? 'Signing in…' : 'Login'}</Text>
         </Pressable>
-        <Text style={styles.note}>Exam starter: login is not implemented yet.</Text>
       </View>
     </ScrollView>
   );
@@ -86,5 +84,4 @@ const styles = StyleSheet.create({
   error: { color: '#b42318' },
   button: { backgroundColor: '#245bb2', padding: 15, borderRadius: 8, alignItems: 'center' },
   buttonText: { color: '#ffffff', fontWeight: '700' },
-  note: { color: '#536579', fontSize: 12, marginTop: 20 },
 });
