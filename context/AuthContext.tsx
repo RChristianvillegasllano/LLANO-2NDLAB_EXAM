@@ -25,13 +25,16 @@ export const AuthContext = createContext<AuthContextValue | undefined>(undefined
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  // False keeps the unfinished starter usable; no session has been restored yet.
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const login = async (accessToken: string, userData: User) => {
     try {
       if (Platform.OS !== 'web') {
         await SecureStore.setItemAsync('token', accessToken);
+        await SecureStore.setItemAsync('user', JSON.stringify(userData));
+      } else if (typeof window !== 'undefined') {
+        window.localStorage.setItem('token', accessToken);
+        window.localStorage.setItem('user', JSON.stringify(userData));
       }
       setToken(accessToken);
       setUser(userData);
@@ -44,6 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       if (Platform.OS !== 'web') {
         await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('user');
+      } else if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('user');
       }
     } catch (error) {
       console.error('Failed to delete token:', error);
@@ -58,24 +65,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthLoading(true);
     try {
       let savedToken = null;
+      let savedUser = null;
       if (Platform.OS !== 'web') {
         savedToken = await SecureStore.getItemAsync('token');
+        const userStr = await SecureStore.getItemAsync('user');
+        if (userStr) savedUser = JSON.parse(userStr);
+      } else if (typeof window !== 'undefined') {
+        savedToken = window.localStorage.getItem('token');
+        const userStr = window.localStorage.getItem('user');
+        if (userStr) savedUser = JSON.parse(userStr);
       }
-      
+
       if (savedToken) {
         const response = await fetch(`${API_BASE_URL}/profile`, {
           headers: { Authorization: `Bearer ${savedToken}` }
         });
-        
+
         if (response.ok) {
           const userData = await response.json();
           setToken(savedToken);
-          setUser(userData);
+          // Merge the mock API data with our stored dynamic user data
+          setUser({ ...userData, ...(savedUser || {}) });
         } else {
           setToken(null);
           setUser(null);
           if (Platform.OS !== 'web') {
             await SecureStore.deleteItemAsync('token');
+            await SecureStore.deleteItemAsync('user');
+          } else if (typeof window !== 'undefined') {
+            window.localStorage.removeItem('token');
+            window.localStorage.removeItem('user');
           }
         }
       }

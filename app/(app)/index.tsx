@@ -6,8 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 export default function DashboardScreen() {
   const { token, user } = useAuth();
   
-  const userName = user?.name || user?.email?.split('@')[0] || 'Student';
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=245bb2&color=fff&size=128&bold=true`;
+  const fullName = user?.name || user?.email?.split('@')[0] || 'Student';
+  const firstName = fullName.split(' ')[0];
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}&background=245bb2&color=fff&size=128&bold=true`;
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -18,7 +19,7 @@ export default function DashboardScreen() {
             <View style={styles.badge}>
               <Text style={styles.eyebrow}>STUDENT PORTAL</Text>
             </View>
-            <Text style={styles.title}>Hello, {userName}</Text>
+            <Text style={styles.title}>Hello, {firstName}</Text>
             <Text style={styles.subtitle}>Welcome back to your dashboard</Text>
           </View>
           <Image source={{ uri: avatarUrl }} style={styles.avatar} />

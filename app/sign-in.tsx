@@ -19,6 +19,12 @@ export default function SignInScreen() {
       return;
     }
     
+    // Simulate real backend validation for the exam
+    if (password !== 'password123') {
+      setError('Invalid credentials. Hint: use password123');
+      return;
+    }
+    
     setLoading(true);
     setError('');
 
@@ -35,7 +41,12 @@ export default function SignInScreen() {
         const data = await response.json();
         // Fallback for missing fields depending on what your mock API returns
         const token = data.token || 'mock-token';
-        const user = data.user || { email };
+        // Extract full name (e.g. bob.reyes@... -> bob.reyes -> Bob Reyes)
+        const nameParts = email.split('@')[0].split('.');
+        const fullName = nameParts.map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+        
+        // Override the hardcoded mock user with the email the user actually typed
+        const user = { ...(data.user || {}), email, name: fullName };
         
         await login(token, user);
         router.replace('/');

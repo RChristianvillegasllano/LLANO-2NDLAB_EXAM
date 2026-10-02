@@ -24,7 +24,8 @@ export default function ProfileScreen() {
         
         if (response.ok) {
           const data = await response.json();
-          setProfile(data);
+          // Merge the mock data with the dynamic authUser so it doesn't revert to "Student"
+          setProfile({ ...data, ...authUser });
         } else {
           // Fallback to AuthContext user if API fails
           setProfile(authUser as ProfileData);
