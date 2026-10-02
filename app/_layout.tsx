@@ -19,7 +19,7 @@ function RootNavigation() {
     } else if (token && inAuthGroup) {
       router.replace('/');
     }
-  }, [token, authLoading, segments]);
+  }, [token, authLoading, segments, router]);
 
   if (authLoading) {
     return (

@@ -14,7 +14,6 @@ export default function ProfileScreen() {
   const { token, logout, user: authUser } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -30,7 +29,7 @@ export default function ProfileScreen() {
           // Fallback to AuthContext user if API fails
           setProfile(authUser as ProfileData);
         }
-      } catch (err) {
+      } catch {
         // Fallback to AuthContext user if network error
         setProfile(authUser as ProfileData);
       } finally {

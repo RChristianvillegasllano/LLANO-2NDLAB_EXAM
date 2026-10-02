@@ -49,7 +49,7 @@ export default function StudentDetailsScreen() {
         } else {
           throw new Error('API failed');
         }
-      } catch (err) {
+      } catch {
         // FALLBACK FOR BROKEN API
         const fallbackStudent = mockStudents.find(s => s.id === id);
         if (fallbackStudent) {

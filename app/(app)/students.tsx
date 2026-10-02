@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import StudentCard, { type Student } from '@/components/StudentCard';
 import { API_BASE_URL } from '@/constants/api';
@@ -11,7 +11,7 @@ export default function StudentsScreen() {
   const [search, setSearch] = useState('');
   const { token } = useAuth();
 
-  const loadStudents = async () => {
+  const loadStudents = useCallback(async () => {
     setLoading(true);
     setError('');
     
@@ -30,7 +30,7 @@ export default function StudentsScreen() {
       } else {
         throw new Error('API returned an error');
       }
-    } catch (err) {
+    } catch {
       // THE MOCK API IS BROKEN, SO WE FALLBACK TO DUMMY DATA FOR THE EXAM
       setStudents([
         { id: '1', name: 'Alice Smith', email: 'alice.smith@university.edu', course: 'Computer Science' },
@@ -42,11 +42,12 @@ export default function StudentsScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadStudents();
-  }, []);
+  }, [loadStudents]);
 
   const filteredStudents = students.filter(student => 
     student.name ? student.name.toLowerCase().includes(search.toLowerCase()) : false
