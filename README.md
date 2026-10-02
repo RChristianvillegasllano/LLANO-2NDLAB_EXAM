@@ -4,11 +4,11 @@
 
 ### Student Information
 
-Name:
+Name: LLANO, Ronald Christian V.
 
-Section:
+Section: 2063
 
-Date:
+Date: 10/1/2026
 
 ### Required Features
 
