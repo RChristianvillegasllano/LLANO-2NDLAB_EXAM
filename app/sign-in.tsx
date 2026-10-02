@@ -20,8 +20,8 @@ export default function SignInScreen() {
     }
     
     // Simulate real backend validation for the exam
-    if (password !== 'password123') {
-      setError('Invalid credentials. Hint: use password123');
+    if (password !== 'Student') {
+      setError('Invalid credentials. Hint: use password "Student"');
       return;
     }
     
