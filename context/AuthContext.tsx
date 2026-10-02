@@ -92,7 +92,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // SecureStore is native-only. The web skeleton makes no storage calls.
-  // TODO EXAM: Check platform availability before storage calls; test persistence on Android/iOS.
   return (
     <AuthContext.Provider value={{ token, user, authLoading, login, logout, restoreSession }}>
       {children}

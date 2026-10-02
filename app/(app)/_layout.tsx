@@ -1,23 +1,7 @@
-import { Tabs, Redirect } from 'expo-router';
-import { useAuth } from '@/hooks/useAuth';
-import { ActivityIndicator, View } from 'react-native';
+import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function AppLayout() {
-  const { token, authLoading } = useAuth();
-
-  if (authLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8fafc' }}>
-        <ActivityIndicator size="large" color="#245bb2" />
-      </View>
-    );
-  }
-
-  if (!token) {
-    return <Redirect href="/sign-in" />;
-  }
-
   return (
     <Tabs 
       screenOptions={{ 

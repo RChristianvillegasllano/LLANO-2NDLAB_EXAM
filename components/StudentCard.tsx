@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-// TODO EXAM: Match these fields to the provided API response.
 export type Student = {
   id?: string | number;
   name?: string | null;
